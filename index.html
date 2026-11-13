@@ -219,7 +219,7 @@ return "<div class=\"item\"><h4>"+esc(l.name)+" <span class=\"badge "+esc(l.stat
 +(wa?"<a class=\"btn small\" href=\""+wa+"\" target=\"_blank\">WhatsApp</a>":"")
 +(l.phone?"<a class=\"btn small ghost\" href=\"tel:"+esc(l.phone.replace(/\D/g,""))+"\">Call</a>":"")
 +"<select onchange=\"setLeadStatus('"+l.id+"',this.value)\">"+["New","Contacted","Qualified","Appointment","Won","Lost"].map(function(s){return "<option "+(l.status===s?"selected":"")+">"+s+"</option>";}).join("")+"</select>"
-+"<button class=\"btn small danger\" type=\"button\" onclick=\"delLead('"+l.id+"')\">Delete</button>"
++"<button class=\"btn small danger\" type=\"button\" onclick=\"delLead('"+l.id+"',this)\">Delete</button>"
 +"</div></div>";
 }).join("");
 };
@@ -234,7 +234,7 @@ return "<div class=\"item\"><h4>"+esc(c.name)+" <span class=\"badge "+esc(c.stat
 +"<div class=\"row\">"
 +"<label style=\"margin:0;color:var(--muted);font-size:14px\">Spend Rs <input type=\"number\" min=\"0\" value=\""+Number(c.spend||0)+"\" style=\"width:130px;display:inline-block\" onchange=\"setClientSpend('"+c.id+"',this.value)\"></label>"
 +"<select onchange=\"setClientStatus('"+c.id+"',this.value)\">"+["Active","Paused","Ended"].map(function(s){return "<option "+(c.status===s?"selected":"")+">"+s+"</option>";}).join("")+"</select>"
-+"<button class=\"btn small danger\" type=\"button\" onclick=\"delClient('"+c.id+"')\">Delete</button>"
++"<button class=\"btn small danger\" type=\"button\" onclick=\"delClient('"+c.id+"',this)\">Delete</button>"
 +"</div></div>";
 }).join("");
 };
@@ -277,10 +277,10 @@ loadAll();
 }).catch(function(e){el("clientMsg").textContent="Client save nahi hua: "+(e.message||e.code);});
 };
 window.setLeadStatus=function(id,s){if(!user)return;setDoc(doc(db,"users",user.uid,"crm_leads",id),{status:s},{merge:true}).then(loadAll);};
-window.delLead=function(id){if(!user)return;if(!confirm("Ye lead delete kar dun?"))return;deleteDoc(doc(db,"users",user.uid,"crm_leads",id)).then(loadAll);};
+window.delLead=function(id,btn){if(!user)return;if(!btn||btn.dataset.armed!=="1"){if(btn){btn.dataset.armed="1";btn.textContent="Pakka delete karo?";setTimeout(function(){if(btn.isConnected){btn.dataset.armed="";btn.textContent="Delete";}},5000);}return;}deleteDoc(doc(db,"users",user.uid,"crm_leads",id)).then(loadAll);};
 window.setClientStatus=function(id,s){if(!user)return;setDoc(doc(db,"users",user.uid,"crm_clients",id),{status:s},{merge:true}).then(loadAll);};
 window.setClientSpend=function(id,v){if(!user)return;setDoc(doc(db,"users",user.uid,"crm_clients",id),{spend:+v||0},{merge:true}).then(loadAll);};
-window.delClient=function(id){if(!user)return;if(!confirm("Ye client delete kar dun?"))return;deleteDoc(doc(db,"users",user.uid,"crm_clients",id)).then(loadAll);};
+window.delClient=function(id,btn){if(!user)return;if(!btn||btn.dataset.armed!=="1"){if(btn){btn.dataset.armed="1";btn.textContent="Pakka delete karo?";setTimeout(function(){if(btn.isConnected){btn.dataset.armed="";btn.textContent="Delete";}},5000);}return;}deleteDoc(doc(db,"users",user.uid,"crm_clients",id)).then(loadAll);};
 </script>
 </body>
 </html>
