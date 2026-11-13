@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meta CRM - Leads aur Clients, ek jagah</title>
+<meta name="description" content="Free CRM for Meta Ads work: leads, follow-ups, clients, campaigns and budgets. Google login, data saves in the cloud.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#070b12;--card:#101827;--text:#f2f6fb;--muted:#a8b8c9;--yellow:#ffc400;--green:#00c853;--blue:#00a3ff;--red:#ff5252;--line:#1e2c3f}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+header{position:sticky;top:0;background:rgba(7,11,18,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);z-index:20}
+nav{display:flex;justify-content:space-between;align-items:center;height:66px;gap:12px;flex-wrap:wrap}
+.logo{font-weight:900;font-size:21px}.logo span{color:var(--yellow)}
+.navlinks{display:flex;gap:20px;color:var(--muted);font-size:15px}
+.navlinks a{cursor:pointer}.navlinks a.on{color:var(--text);font-weight:700}
+.btn{display:inline-block;background:var(--yellow);color:#141000;font-weight:800;padding:11px 20px;border-radius:12px;border:0;cursor:pointer;font-size:15px}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+.btn.small{padding:8px 13px;font-size:14px}
+.btn.danger{background:transparent;color:var(--red);border:1px solid #4a1d1d}
+.chip{display:none;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:99px;padding:7px 13px;font-size:14px;font-weight:700}
+section{padding:34px 0}
+h2{font-size:30px;letter-spacing:-.5px}
+.sub{color:var(--muted);max-width:640px;margin:10px 0 24px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+.stat b{font-size:32px;display:block}
+.stat span{color:var(--muted);font-size:14px}
+.stat.warn b{color:var(--yellow)}.stat.bad b{color:var(--red)}.stat.good b{color:var(--green)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;margin-bottom:20px}
+.box h3{font-size:19px;margin-bottom:14px}
+label{display:block;color:var(--muted);font-size:14px;margin:10px 0 5px}
+input,select,textarea{width:100%;background:#0b1220;border:1px solid var(--line);color:var(--text);border-radius:10px;padding:11px 12px;font:inherit}
+textarea{min-height:70px;resize:vertical}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.toolbar input,.toolbar select{width:auto;flex:1;min-width:160px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:12px}
+.item h4{font-size:17px}
+.item p{color:var(--muted);font-size:14px;margin-top:4px}
+.item .row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center}
+.item .row select{width:auto;flex:none;padding:8px 10px}
+.badge{font-size:12px;font-weight:800;padding:4px 10px;border-radius:99px;background:#1a2635;color:var(--yellow)}
+.badge.New{background:#1a2635;color:var(--blue)}
+.badge.Contacted{background:#1a2635;color:var(--text)}
+.badge.Qualified{background:#0f2a1d;color:var(--green)}
+.badge.Appointment{background:#2a1e05;color:var(--yellow)}
+.badge.Won{background:#0f2a1d;color:var(--green)}
+.badge.Lost{background:#2a1414;color:var(--red)}
+.badge.Active{background:#0f2a1d;color:var(--green)}
+.badge.Paused{background:#2a1e05;color:var(--yellow)}
+.badge.Ended{background:#2a1414;color:var(--red)}
+.due{color:var(--yellow);font-weight:700}.overdue{color:var(--red);font-weight:700}
+.hidden{display:none!important}
+footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-size:14px}
+@media(max-width:820px){.stats{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.navlinks{display:none}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><nav>
+<a class="logo" href="#">Meta<span>CRM</span></a>
+<div class="navlinks"><a id="tabDash" class="on" onclick="showTab('dash')">Dashboard</a><a id="tabLeads" onclick="showTab('leads')">Leads</a><a id="tabClients" onclick="showTab('clients')">Clients</a></div>
+<span class="chip" id="userChip"></span>
+<button class="btn" id="loginBtn" type="button" onclick="googleLogin()">Google se Login karo</button>
+<button class="btn ghost" id="logoutBtn" type="button" style="display:none" onclick="googleLogout()">Logout</button>
+</nav></div></header>
+
+<main class="wrap">
+<div id="loginGate" style="padding:60px 0;text-align:center">
+<h2>Leads aur clients, ek jagah.</h2>
+<p class="sub" style="margin-left:auto;margin-right:auto">Meta Ads ke leads, follow-up, clients aur budget, sab cloud me save. Google se login karo, data sirf tum dekh sakte ho. Bilkul free, Firebase free plan par.</p>
+<button class="btn" type="button" onclick="googleLogin()">Google se Login karo</button>
+</div>
+
+<div id="app" class="hidden">
+<section id="sec-dash">
+<h2>Dashboard</h2>
+<p class="sub">Aaj kya karna hai, ek nazar me.</p>
+<div class="stats">
+<div class="stat"><b id="stTotalLeads">0</b><span>Total leads</span></div>
+<div class="stat"><b id="stNewLeads">0</b><span>New leads</span></div>
+<div class="stat warn"><b id="stDue">0</b><span>Follow-up due (aaj + overdue)</span></div>
+<div class="stat good"><b id="stWon">0</b><span>Won</span></div>
+<div class="stat"><b id="stClients">0</b><span>Total clients</span></div>
+<div class="stat good"><b id="stActive">0</b><span>Active campaigns</span></div>
+<div class="stat"><b id="stBudget">Rs 0</b><span>Total monthly budget</span></div>
+<div class="stat"><b id="stSpend">Rs 0</b><span>Ad spend is mahine</span></div>
+</div>
+<div class="box" style="margin-top:20px"><h3>Aaj ke follow-up</h3><div id="dueList"><p style="color:var(--muted)">Koi follow-up due nahi hai.</p></div></div>
+</section>
+
+<section id="sec-leads" class="hidden">
+<h2>Leads</h2>
+<p class="sub">Meta Lead Ads, WhatsApp, website ya referral se aaye leads. Status badlo, follow-up date lagao, kuch bhi miss mat karo.</p>
+<div class="box"><h3>Naya lead add karo</h3>
+<div class="grid2">
+<div><label>Naam</label><input id="leadName" type="text" placeholder="Jaise: Rahul Sharma"></div>
+<div><label>Phone</label><input id="leadPhone" type="tel" placeholder="10 digit mobile number"></div>
+<div><label>Service / Requirement</label><input id="leadService" type="text" placeholder="Jaise: Dental clinic leads"></div>
+<div><label>Source</label><select id="leadSource"><option>Meta Lead Ad</option><option>WhatsApp</option><option>Website</option><option>Referral</option><option>Other</option></select></div>
+<div><label>Campaign (agar pata ho)</label><input id="leadCampaign" type="text" placeholder="Jaise: Delhi Dental - Leads"></div>
+<div><label>Status</label><select id="leadStatus"><option>New</option><option>Contacted</option><option>Qualified</option><option>Appointment</option><option>Won</option><option>Lost</option></select></div>
+<div><label>Follow-up date</label><input id="leadFollowUp" type="date"></div>
+<div><label>Notes</label><input id="leadNotes" type="text" placeholder="Jaise: Budget 50k, shaam 6 baje call karna"></div>
+</div>
+<button class="btn" type="button" onclick="addLead()" style="margin-top:14px">Lead save karo</button>
+<p id="leadMsg" style="margin-top:10px;color:var(--muted);font-size:14px"></p>
+</div>
+<div class="toolbar">
+<input id="leadSearch" type="text" placeholder="Search: naam, phone, service, campaign" oninput="renderLeads()">
+<select id="leadFilter" onchange="renderLeads()"><option value="">Sab status</option><option>New</option><option>Contacted</option><option>Qualified</option><option>Appointment</option><option>Won</option><option>Lost</option></select>
+</div>
+<div id="leadsList"></div>
+</section>
+
+<section id="sec-clients" class="hidden">
+<h2>Clients</h2>
+<p class="sub">Agency clients, unki service, monthly budget aur ad spend. Kaunsa client active hai, kitna budget hai, sab yahin.</p>
+<div class="box"><h3>Naya client add karo</h3>
+<div class="grid2">
+<div><label>Business / Client naam</label><input id="clientName" type="text" placeholder="Jaise: Smile Dental Clinic"></div>
+<div><label>Contact person</label><input id="clientContact" type="text" placeholder="Jaise: Dr. Verma"></div>
+<div><label>Phone</label><input id="clientPhone" type="tel" placeholder="10 digit mobile number"></div>
+<div><label>Service</label><select id="clientService"><option>Meta Ads</option><option>Google Ads</option><option>Meta + Google Ads</option><option>Shopify / Website</option><option>Social Media</option><option>Other</option></select></div>
+<div><label>Monthly budget (Rs)</label><input id="clientBudget" type="number" min="0" placeholder="Jaise: 50000"></div>
+<div><label>Ad spend is mahine (Rs)</label><input id="clientSpend" type="number" min="0" placeholder="Jaise: 12000"></div>
+<div><label>Campaign status</label><select id="clientStatus"><option>Active</option><option>Paused</option><option>Ended</option></select></div>
+<div><label>Start date</label><input id="clientStart" type="date"></div>
+</div>
+<label>Notes</label><input id="clientNotes" type="text" placeholder="Jaise: Leads target 100/month">
+<button class="btn" type="button" onclick="addClient()" style="margin-top:14px">Client save karo</button>
+<p id="clientMsg" style="margin-top:10px;color:var(--muted);font-size:14px"></p>
+</div>
+<div id="clientsList"></div>
+</section>
+</div>
+</main>
+
+<footer><div class="wrap"><span>Meta CRM - Free, Google login, data tumhare Firebase project me.</span></div></footer>
+
+<script>
+function showTab(t){
+["dash","leads","clients"].forEach(function(x){
+document.getElementById("sec-"+x).classList.toggle("hidden",x!==t);
+document.getElementById("tab"+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle("on",x===t);
+});
+}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function waLink(phone){
+var d=String(phone||"").replace(/\D/g,"");
+if(d.length===10)d="91"+d;
+if(!d)return "";
+return "https://wa.me/"+d;
+}
+function todayStr(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+</script>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+import {getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut} from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
+import {getFirestore, collection, addDoc, getDocs, query, orderBy, limit, doc, setDoc, deleteDoc} from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
+var firebaseConfig={apiKey:"AIzaSyA6sxadwzS21VmqJBp3qLfQel1AKlcED8c",authDomain:"driver-saathi-241e6.firebaseapp.com",projectId:"driver-saathi-241e6",storageBucket:"driver-saathi-241e6.firebasestorage.app",messagingSenderId:"103289109240",appId:"1:103289109240:web:5419b27305d8e79d04d90d"};
+var auth=null,db=null,user=null,leads=[],clients=[];
+function el(id){return document.getElementById(id);}
+function val(id){var e=el(id);return e?e.value.trim():"";}
+function inr(n){return "Rs "+Number(n||0).toLocaleString("en-IN");}
+try{
+var app=initializeApp(firebaseConfig);
+auth=getAuth(app);db=getFirestore(app);
+window.googleLogin=function(){var p=new GoogleAuthProvider();signInWithPopup(auth,p).catch(function(e){if(e.code==="auth/popup-blocked"||e.code==="auth/popup-closed-by-user"){signInWithRedirect(auth,p);}else{alert("Google login nahi hua: "+(e.message||e.code));}});};
+window.googleLogout=function(){signOut(auth);};
+getRedirectResult(auth).catch(function(){});
+onAuthStateChanged(auth,function(u){
+user=u;
+var gate=el("loginGate"),appBox=el("app"),chip=el("userChip"),lb=el("loginBtn"),lo=el("logoutBtn");
+if(u){
+gate.classList.add("hidden");appBox.classList.remove("hidden");
+chip.style.display="inline-flex";chip.textContent="Hi, "+(u.displayName||u.email);
+lb.style.display="none";lo.style.display="inline-block";
+loadAll();
+}else{
+gate.classList.remove("hidden");appBox.classList.add("hidden");
+chip.style.display="none";lb.style.display="inline-block";lo.style.display="none";
+leads=[];clients=[];
+}
+});
+}catch(e){console.log("Firebase load fail",e);alert("CRM load nahi hua, internet check karke page reload karo.");}
+function loadAll(){
+if(!user)return;
+var q1=query(collection(db,"users",user.uid,"crm_leads"),orderBy("ts","desc"),limit(200));
+var q2=query(collection(db,"users",user.uid,"crm_clients"),orderBy("ts","desc"),limit(200));
+getDocs(q1).then(function(s){leads=[];s.forEach(function(d){var o=d.data();o.id=d.id;leads.push(o);});renderLeads();renderDash();}).catch(function(e){el("leadsList").innerHTML="<p style=\"color:var(--muted)\">Leads load nahi hue: "+esc(e.message||e.code)+"</p>";});
+getDocs(q2).then(function(s){clients=[];s.forEach(function(d){var o=d.data();o.id=d.id;clients.push(o);});renderClients();renderDash();}).catch(function(e){el("clientsList").innerHTML="<p style=\"color:var(--muted)\">Clients load nahi hue: "+esc(e.message||e.code)+"</p>";});
+}
+function dueInfo(l){
+if(!l.followUp||l.status==="Won"||l.status==="Lost")return "";
+var t=todayStr();
+if(l.followUp<t)return "<span class=\"overdue\">Follow-up OVERDUE: "+l.followUp+"</span>";
+if(l.followUp===t)return "<span class=\"due\">Follow-up AAJ: "+l.followUp+"</span>";
+return "Follow-up: "+l.followUp;
+}
+window.renderLeads=function(){
+var q=val("leadSearch").toLowerCase(),f=val("leadFilter");
+var list=el("leadsList");if(!list)return;
+var rows=leads.filter(function(l){
+if(f&&l.status!==f)return false;
+if(q&&((l.name||"")+" "+(l.phone||"")+" "+(l.service||"")+" "+(l.campaign||"")).toLowerCase().indexOf(q)<0)return false;
+return true;
+});
+if(!rows.length){list.innerHTML="<p style=\"color:var(--muted)\">Koi lead nahi mila.</p>";return;}
+list.innerHTML=rows.map(function(l){
+var wa=waLink(l.phone);
+return "<div class=\"item\"><h4>"+esc(l.name)+" <span class=\"badge "+esc(l.status)+"\">"+esc(l.status)+"</span></h4>"
++"<p>"+esc(l.service||"")+(l.campaign?" | "+esc(l.campaign):"")+" | "+esc(l.source||"")+"</p>"
++"<p>Phone: "+esc(l.phone||"")+(l.followUp?" | "+dueInfo(l):"")+"</p>"
++(l.notes?"<p>Notes: "+esc(l.notes)+"</p>":"")
++"<div class=\"row\">"
++(wa?"<a class=\"btn small\" href=\""+wa+"\" target=\"_blank\">WhatsApp</a>":"")
++(l.phone?"<a class=\"btn small ghost\" href=\"tel:"+esc(l.phone.replace(/\D/g,""))+"\">Call</a>":"")
++"<select onchange=\"setLeadStatus('"+l.id+"',this.value)\">"+["New","Contacted","Qualified","Appointment","Won","Lost"].map(function(s){return "<option "+(l.status===s?"selected":"")+">"+s+"</option>";}).join("")+"</select>"
++"<button class=\"btn small danger\" type=\"button\" onclick=\"delLead('"+l.id+"')\">Delete</button>"
++"</div></div>";
+}).join("");
+};
+window.renderClients=function(){
+var list=el("clientsList");if(!list)return;
+if(!clients.length){list.innerHTML="<p style=\"color:var(--muted)\">Abhi koi client nahi hai.</p>";return;}
+list.innerHTML=clients.map(function(c){
+return "<div class=\"item\"><h4>"+esc(c.name)+" <span class=\"badge "+esc(c.status)+"\">"+esc(c.status)+"</span></h4>"
++"<p>"+esc(c.service||"")+" | Contact: "+esc(c.contact||"")+" | "+esc(c.phone||"")+"</p>"
++"<p>Monthly budget: "+inr(c.budget)+" | Spend is mahine: "+inr(c.spend)+(c.startDate?" | Start: "+esc(c.startDate):"")+"</p>"
++(c.notes?"<p>Notes: "+esc(c.notes)+"</p>":"")
++"<div class=\"row\">"
++"<label style=\"margin:0;color:var(--muted);font-size:14px\">Spend Rs <input type=\"number\" min=\"0\" value=\""+Number(c.spend||0)+"\" style=\"width:130px;display:inline-block\" onchange=\"setClientSpend('"+c.id+"',this.value)\"></label>"
++"<select onchange=\"setClientStatus('"+c.id+"',this.value)\">"+["Active","Paused","Ended"].map(function(s){return "<option "+(c.status===s?"selected":"")+">"+s+"</option>";}).join("")+"</select>"
++"<button class=\"btn small danger\" type=\"button\" onclick=\"delClient('"+c.id+"')\">Delete</button>"
++"</div></div>";
+}).join("");
+};
+window.renderDash=function(){
+el("stTotalLeads").textContent=leads.length;
+el("stNewLeads").textContent=leads.filter(function(l){return l.status==="New";}).length;
+var t=todayStr();
+var due=leads.filter(function(l){return l.followUp&&l.followUp<=t&&l.status!=="Won"&&l.status!=="Lost";});
+el("stDue").textContent=due.length;
+el("stWon").textContent=leads.filter(function(l){return l.status==="Won";}).length;
+el("stClients").textContent=clients.length;
+el("stActive").textContent=clients.filter(function(c){return c.status==="Active";}).length;
+el("stBudget").textContent=inr(clients.reduce(function(a,c){return a+Number(c.budget||0);},0));
+el("stSpend").textContent=inr(clients.reduce(function(a,c){return a+Number(c.spend||0);},0));
+var dl=el("dueList");
+if(!due.length){dl.innerHTML="<p style=\"color:var(--muted)\">Koi follow-up due nahi hai.</p>";}
+else{dl.innerHTML=due.map(function(l){return "<p style=\"margin-bottom:8px\"><b>"+esc(l.name)+"</b> - "+esc(l.phone||"")+" - "+esc(l.service||"")+" - <span class=\""+(l.followUp<t?"overdue":"due")+"\">"+l.followUp+"</span></p>";}).join("");}
+};
+window.addLead=function(){
+if(!user){alert("Pehle Google se login karo.");return;}
+var name=val("leadName"),phone=val("leadPhone");
+if(!name){el("leadMsg").textContent="Lead ka naam dalo.";return;}
+if(!phone){el("leadMsg").textContent="Phone number dalo.";return;}
+el("leadMsg").textContent="Lead save ho raha hai...";
+addDoc(collection(db,"users",user.uid,"crm_leads"),{name:name,phone:phone,service:val("leadService"),source:val("leadSource"),campaign:val("leadCampaign"),status:val("leadStatus"),followUp:val("leadFollowUp"),notes:val("leadNotes"),ts:Date.now()}).then(function(){
+el("leadMsg").textContent="Lead save ho gaya.";
+["leadName","leadPhone","leadService","leadCampaign","leadFollowUp","leadNotes"].forEach(function(id){el(id).value="";});
+loadAll();
+}).catch(function(e){el("leadMsg").textContent="Lead save nahi hua: "+(e.message||e.code);});
+};
+window.addClient=function(){
+if(!user){alert("Pehle Google se login karo.");return;}
+var name=val("clientName");
+if(!name){el("clientMsg").textContent="Client ka naam dalo.";return;}
+el("clientMsg").textContent="Client save ho raha hai...";
+addDoc(collection(db,"users",user.uid,"crm_clients"),{name:name,contact:val("clientContact"),phone:val("clientPhone"),service:val("clientService"),budget:val("clientBudget")?+val("clientBudget"):0,spend:val("clientSpend")?+val("clientSpend"):0,status:val("clientStatus"),startDate:val("clientStart"),notes:val("clientNotes"),ts:Date.now()}).then(function(){
+el("clientMsg").textContent="Client save ho gaya.";
+["clientName","clientContact","clientPhone","clientBudget","clientSpend","clientStart","clientNotes"].forEach(function(id){el(id).value="";});
+loadAll();
+}).catch(function(e){el("clientMsg").textContent="Client save nahi hua: "+(e.message||e.code);});
+};
+window.setLeadStatus=function(id,s){if(!user)return;setDoc(doc(db,"users",user.uid,"crm_leads",id),{status:s},{merge:true}).then(loadAll);};
+window.delLead=function(id){if(!user)return;if(!confirm("Ye lead delete kar dun?"))return;deleteDoc(doc(db,"users",user.uid,"crm_leads",id)).then(loadAll);};
+window.setClientStatus=function(id,s){if(!user)return;setDoc(doc(db,"users",user.uid,"crm_clients",id),{status:s},{merge:true}).then(loadAll);};
+window.setClientSpend=function(id,v){if(!user)return;setDoc(doc(db,"users",user.uid,"crm_clients",id),{spend:+v||0},{merge:true}).then(loadAll);};
+window.delClient=function(id){if(!user)return;if(!confirm("Ye client delete kar dun?"))return;deleteDoc(doc(db,"users",user.uid,"crm_clients",id)).then(loadAll);};
+</script>
+</body>
+</html>
